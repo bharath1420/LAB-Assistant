@@ -1,0 +1,6 @@
+{
+  "name": "AI Lab Assistant - DBMS",
+  "description": "Interactive AI-powered lab assistant restricted strictly to Database Management System concepts, SQL, and lab experiments.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

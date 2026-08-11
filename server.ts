@@ -1158,7 +1158,12 @@ app.delete('/api/history', async (req: Request, res: Response) => {
     const vite = await createViteServer({ server: { middlewareMode: 'ssr' } as any });
     app.use(vite.middlewares as any);
   } else {
-    app.use(express.static(path.resolve(__dirname, 'dist')));
+    app.use(express.static(path.resolve(process.cwd(), 'dist')));
+    // Serve index.html for all non-API routes (SPA client-side routing)
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api')) return next();
+      res.sendFile(path.resolve(process.cwd(), 'dist', 'index.html'));
+    });
   }
 
   app.listen(PORT, '0.0.0.0', () => {

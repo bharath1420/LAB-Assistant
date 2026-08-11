@@ -49,7 +49,7 @@ export async function loginWithSupabase(email: string, password: string, role: s
       return { user: userProfile, error: null };
     }
   } catch (err: any) {
-    console.warn('Supabase Auth client note:', err?.message || err);
+    console.warn('Supabase Auth unavailable, falling back to backend:', err?.message || err);
   }
 
   return { user: null, error: null };

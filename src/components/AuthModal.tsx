@@ -44,6 +44,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
     try {
       // Step 1: Attempt Supabase Auth login for Login mode if credential is an email
+      // If Supabase succeeds, use it. If it fails for ANY reason, fall through to backend API.
       if (credential.includes('@')) {
         const sbRes = await loginWithSupabase(credential, password, role);
         if (sbRes.user) {
@@ -57,11 +58,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           onClose();
           setLoading(false);
           return;
-        } else if (sbRes.error && !sbRes.error.includes('Invalid API key')) {
-          setError(sbRes.error);
-          setLoading(false);
-          return;
         }
+        // If Supabase fails (invalid key, network error, etc.), silently fall through to backend API
       }
 
       // Step 2: Main Backend server API Authentication

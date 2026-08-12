@@ -29,32 +29,32 @@ export const Navbar: React.FC<NavbarProps> = ({
   const cName = courseInfo?.name || 'Database Management Systems Laboratory';
 
   return (
-    <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 flex items-center justify-between sticky top-0 z-30 transition-colors">
+    <header className="h-14 sm:h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-2 sm:px-4 flex items-center justify-between sticky top-0 z-30 transition-colors">
       {/* Left section */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         <button
           onClick={toggleSidebar}
-          className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors md:hidden"
+          className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors md:hidden shrink-0"
           title="Toggle Navigation Menu"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-            <Database className="w-5 h-5" />
+        <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 shrink-0">
+            <Database className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-bold text-slate-900 dark:text-white text-base leading-snug">
-                {cCode} AI Lab Assistant
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <h1 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base leading-snug truncate">
+                {cCode} AI Lab
               </h1>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 uppercase tracking-wider">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 uppercase tracking-wider hidden sm:inline-block shrink-0">
                 {cCode} Only
               </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-[180px] sm:max-w-xs">
-              {activeTab === 'chat' ? chatTitle : activeTab === 'experiments' ? `${cCode} Lab Manual` : activeTab === 'about' ? `${cCode} Syllabus & Topics` : activeTab === 'admin' ? 'Teacher / Admin Oversight Portal' : cName}
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-[120px] sm:max-w-xs">
+              {activeTab === 'chat' ? chatTitle : activeTab === 'experiments' ? 'Lab Manual' : activeTab === 'about' ? 'Syllabus' : activeTab === 'admin' ? 'Admin Portal' : cName}
             </p>
           </div>
         </div>
@@ -128,7 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Right action & Auth state */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
         {user ? (
           <div className="flex items-center gap-2">
             <div className="hidden md:flex flex-col text-right">

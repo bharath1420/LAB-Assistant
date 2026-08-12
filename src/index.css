@@ -1,1 +1,42 @@
 @import "tailwindcss";
+
+/* Prevent horizontal overflow on the entire page */
+html, body, #root {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Hide scrollbar for horizontal-scrolling tab bars */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe-area inset padding for iOS notch devices */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Ensure long words in chat messages break properly on mobile */
+.break-anywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Mobile-friendly tap targets */
+@media (max-width: 640px) {
+  button, a, [role="button"] {
+    min-height: 36px;
+  }
+  
+  /* Prevent text selection on rapid taps */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}

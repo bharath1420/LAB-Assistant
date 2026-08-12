@@ -13,17 +13,38 @@ import { ShieldCheck, GraduationCap, UserCheck, LogOut, LayoutDashboard, Sparkle
 
 const STORAGE_KEY_SESSIONS = 'dbms_lab_ai_sessions_v1';
 const STORAGE_KEY_SETTINGS = 'dbms_lab_ai_settings_v1';
+const STORAGE_KEY_USER = 'dbms_lab_ai_user_v1';
+const STORAGE_KEY_ACTIVE_TAB = 'dbms_lab_ai_active_tab_v1';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'chat' | 'experiments' | 'about' | 'admin' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'chat' | 'experiments' | 'about' | 'admin' | 'settings'>(() => {
+    try {
+      const savedTab = localStorage.getItem(STORAGE_KEY_ACTIVE_TAB);
+      if (savedTab && ['dashboard', 'chat', 'experiments', 'about', 'admin', 'settings'].includes(savedTab)) {
+        return savedTab as any;
+      }
+    } catch {}
+    return 'dashboard';
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // User auth state
-  const [user, setUser] = useState<UserAccount | null>(null);
+  const [user, setUser] = useState<UserAccount | null>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_USER);
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const handleLogoutUser = () => {
     setUser(null);
+    try {
+      localStorage.removeItem(STORAGE_KEY_USER);
+      localStorage.removeItem(STORAGE_KEY_ACTIVE_TAB);
+    } catch {}
     setActiveTab('dashboard');
     setIsAuthModalOpen(true);
   };
@@ -36,6 +57,9 @@ export default function App() {
 
   const handleLoginUser = (newUser: UserAccount) => {
     setUser(newUser);
+    try {
+      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(newUser));
+    } catch {}
     if (newUser.role === 'admin') {
       setActiveTab('admin');
     } else {
@@ -55,6 +79,9 @@ export default function App() {
       }
     }
     setActiveTab(tab);
+    try {
+      localStorage.setItem(STORAGE_KEY_ACTIVE_TAB, tab);
+    } catch {}
   };
 
   // Syllabus state
@@ -555,29 +582,29 @@ export default function App() {
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
       
       {/* Top Bar with Portal Role Switcher */}
-      <div className="bg-slate-900 text-white px-4 py-1.5 border-b border-slate-800 flex items-center justify-between text-xs z-40 shrink-0">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-blue-400">DBMS AI Lab System</span>
-          <span className="text-slate-500">•</span>
-          <span className="text-slate-300">{courseInfo.code} - {courseInfo.name}</span>
+      <div className="bg-slate-900 text-white px-2 sm:px-4 py-1.5 border-b border-slate-800 flex items-center justify-between text-xs z-40 shrink-0 min-w-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink">
+          <span className="font-bold text-blue-400 shrink-0">DBMS AI Lab</span>
+          <span className="text-slate-500 hidden sm:inline">•</span>
+          <span className="text-slate-300 truncate hidden sm:inline">{courseInfo.code} - {courseInfo.name}</span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Active user status & role indicator */}
           {user && (
-            <div className="flex items-center gap-1.5 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
+            <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-800 px-1.5 sm:px-2.5 py-1 rounded-lg border border-slate-700">
               {user.role === 'admin' ? (
                 <ShieldCheck className="w-3.5 h-3.5 text-purple-400 shrink-0" />
               ) : (
                 <GraduationCap className="w-3.5 h-3.5 text-blue-400 shrink-0" />
               )}
-              <span className="font-bold text-white truncate max-w-[180px]">
-                {user.name} {user.studentId && user.studentId !== 'CS2026-SUPABASE' ? `(${user.studentId})` : ''}
+              <span className="font-bold text-white truncate max-w-[80px] sm:max-w-[180px]">
+                {user.name}
               </span>
-              <span className={`px-1.5 py-0.2 rounded text-[10px] font-extrabold uppercase ${
+              <span className={`px-1.5 py-0.2 rounded text-[10px] font-extrabold uppercase hidden sm:inline ${
                 user.role === 'admin' ? 'bg-purple-900 text-purple-200' : 'bg-blue-900 text-blue-200'
               }`}>
-                {user.role === 'admin' ? 'Teacher Admin' : 'Student'}
+                {user.role === 'admin' ? 'Admin' : 'Student'}
               </span>
             </div>
           )}
